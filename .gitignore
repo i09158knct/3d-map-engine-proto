@@ -1,0 +1,7 @@
+bower_components
+node_modules
+tmp
+public/index.ejs
+public/js/vendor
+public/css/vendor
+www

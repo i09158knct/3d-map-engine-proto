@@ -1,0 +1,21 @@
+{
+  "name": "FIXME",
+  "version": "0.0.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "underscore": "~1.5.2",
+    "underscore.string": "~2.3.1",
+    "backbone": "~1.1.0",
+    "angular": "~1.0.8",
+    "d3": "~3.3.8",
+    "coffee-script": "~1.6.3"
+  }
+}
