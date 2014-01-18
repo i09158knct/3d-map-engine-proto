@@ -17,46 +17,50 @@ module.exports = (grunt) ->
           livereload: true
 
 
-    exec:
-      server_base_command: 'python -m SimpleHTTPServer'
-      server: command: '<%= exec.server_base_command %>'
-      server_background: command: '<%= exec.server_base_command %> &'
+    connect:
+      server:
+        options:
+          port: 8000
+          base: 'public'
+          livereload: true
 
+
+    exec:
       build_index_page:
         command: 'coffee scripts/build-index-page.coffee public > public/index.html'
+
+
+    components:
+      'public/js/vendor': [
+        'bower_components/jquery/jquery.js'
+        'bower_components/underscore/underscore.js'
+        'bower_components/underscore.string/lib/underscore.string.js'
+        'bower_components/knockout.js/knockout.debug.js'
+        'bower_components/knockout.js/knockout.js'
+        'bower_components/threejs/build/three.js'
+      ]
+      'public/css/vendor': [
+      ]
+      'public/img': [
+      ]
 
 
 
   grunt.loadNpmTasks task for task in [
     'grunt-exec'
     'grunt-contrib-watch'
+    'grunt-contrib-connect'
   ]
 
 
 
   grunt.registerTask 'copy-components', ->
-    (
+    for pathName, sources of grunt.config.get('components')
       grunt.file.mkdir pathName
       for source in sources
         fileName = path.basename source
         grunt.log.writeln "copying #{fileName}"
         grunt.file.copy source, "#{pathName}/#{fileName}"
-    ) for pathName, sources of {
-      'public/js/vendor': [
-        'bower_components/backbone/backbone.js'
-        'bower_components/underscore/underscore.js'
-        'bower_components/underscore.string/lib/underscore.string.js'
-        'bower_components/jquery/jquery.js'
-        'bower_components/d3/d3.js'
-        'bower_components/three/build/three.js'
-        'bower_components/angular/angular.js'
-        'bower_components/coffee-script/extras/coffee-script.js'
-      ]
-      'public/css/vendor': [
-      ]
-      'public/img': [
-      ]
-    }
 
 
 
@@ -68,9 +72,9 @@ module.exports = (grunt) ->
     'build': [
       'initialize'
     ]
-    'server': ['exec:server']
+    'server': ['connect:keepalive']
     'default': [
-      'exec:server_background'
+      'connect'
       'watch'
     ]
   }
