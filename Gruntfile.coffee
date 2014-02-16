@@ -10,7 +10,7 @@ module.exports = (grunt) ->
           '!index.html'
         ]
         tasks: [
-          'exec:build_index_page'
+          # 'exec:build_index_page'
         ]
         options:
           cwd: 'public'
@@ -26,8 +26,11 @@ module.exports = (grunt) ->
 
 
     exec:
+      harp_base_command: 'node_modules/.bin/harp server public'
+      harp: command: '<%= exec.harp_base_command %>'
+      harp_background: command: '<%= exec.harp_base_command %> &'
       build_index_page:
-        command: 'coffee scripts/build-index-page.coffee public > public/index.html'
+        command: 'node_modules/.bin/coffee scripts/build-index-page.coffee public > public/index.html'
 
 
     components:
@@ -72,9 +75,9 @@ module.exports = (grunt) ->
     'build': [
       'initialize'
     ]
-    'server': ['connect:keepalive']
+    'server': ['exec:harp']
     'default': [
-      'connect'
+      'exec:harp_background'
       'watch'
     ]
   }
