@@ -36,11 +36,16 @@ module.exports = (grunt) ->
     components:
       'public/js/vendor': [
         'bower_components/jquery/jquery.js'
+        'bower_components/knockout.js/knockout.debug.js'
+        'bower_components/threejs/build/three.js'
+
         'bower_components/underscore/underscore.js'
         'bower_components/underscore.string/lib/underscore.string.js'
-        'bower_components/knockout.js/knockout.debug.js'
-        'bower_components/knockout.js/knockout.js'
-        'bower_components/threejs/build/three.js'
+        'bower_components/moment/moment.js'
+        'bower_components/q/q.js'
+
+        'bower_components/proj4/dist/proj4-src.js'
+        'bower_components/d3/d3.js'
       ]
       'public/css/vendor': [
       ]
