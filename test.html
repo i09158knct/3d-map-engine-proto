@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>test</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .controller {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  </style>
+  <script src="js/vendor/jquery.js"></script>
+  <script src="js/vendor/knockout.debug.js"></script>
+  <script src="js/vendor/underscore.js"></script>
+  <script src="js/vendor/underscore.string.js"></script>
+  <script src="js/vendor/three.js"></script>
+  <script src="js/vendor/proj4-src.js"></script>
+  <script src="js/vendor/q.js"></script>
+  <script src="js/vendor/d3.js"></script>
+  <script> window._s = _.string; </script>
+  <script src="js/TrackballControl.js"></script>
+
+  <script src="js/mylib.js"></script>
+  <script src="js/osmgeopanel.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<div class="controller" id="controller">
+  <button class="go goLeft">left</button>
+  <button class="go goRight">right</button>
+  <button class="go goUp">up</button>
+  <button class="go goDown">down</button>
+</div>
+</body>
+</html>
