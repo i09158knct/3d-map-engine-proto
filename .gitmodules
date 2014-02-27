@@ -1,0 +1,4 @@
+[submodule "www"]
+	path = www
+	url = git@github.com:i09158knct/3d-map-engine-proto.git
+	branch = gh-pages
