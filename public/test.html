@@ -4,19 +4,6 @@
   <meta charset="utf-8">
   <title>test</title>
   <link rel="stylesheet" href="css/main.css">
-  <style type="text/css">
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .controller {
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
-  </style>
   <script src="js/vendor/jquery.js"></script>
   <script src="js/vendor/knockout.debug.js"></script>
   <script src="js/vendor/underscore.js"></script>
@@ -34,11 +21,40 @@
 </head>
 <body>
 <div id="container"></div>
-<div class="controller" id="controller">
-  <button class="go goLeft">left</button>
-  <button class="go goRight">right</button>
-  <button class="go goUp">up</button>
-  <button class="go goDown">down</button>
+<div id="controller" data-bind="disable: !isStoping()">
+  <button onmousedown="moveStates.left=true" onmouseup="moveStates.left=false">left</button>
+  <button onmousedown="moveStates.right=true" onmouseup="moveStates.right=false">right</button>
+  <button onmousedown="moveStates.up=true" onmouseup="moveStates.up=false">up</button>
+  <button onmousedown="moveStates.down=true" onmouseup="moveStates.down=false">down</button>
+  <button data-bind="disable: !isStoping(), click: start">start</button>
+  <button data-bind="disable: isStoping(), click: stop">stop</button>
+  <button data-bind="click: removeAll">clear</button>
+  <div>
+    <form>
+      <label>center:</label>
+      <input type="number" data-bind="value: center.lon, valueUpdate: 'afterkeydown'">
+      <input type="number" data-bind="value: center.lat, valueUpdate: 'afterkeydown'">
+    </form>
+    <form>
+      <label>xyz:</label>
+      <button data-bind="click: loadTile">load</button>
+      <input type="number" data-bind="value: tile.x, valueUpdate: 'afterkeydown'">
+      <input type="number" data-bind="value: tile.y, valueUpdate: 'afterkeydown'">
+      <input type="number" data-bind="value: tile.z, valueUpdate: 'afterkeydown'">
+      <span>
+        <input type="number" data-bind="value: tileLocation.lon, valueUpdate: 'afterkeydown'">,
+        <input type="number" data-bind="value: tileLocation.lat, valueUpdate: 'afterkeydown'">
+      </span>
+    </form>
+    <!-- <form>
+      <label>swne: </label>
+      <input type="text" data-bind="value: boundary.s">
+      <input type="text" data-bind="value: boundary.w">
+      <input type="text" data-bind="value: boundary.n">
+      <input type="text" data-bind="value: boundary.e">
+      <button data-bind="click: loadBoundary">load</button>
+    </form> -->
+  </div>
 </div>
 </body>
 </html>
