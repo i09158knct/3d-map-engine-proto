@@ -29,6 +29,7 @@ module.exports = (grunt) ->
       harp_base_command: 'node_modules/.bin/harp server public'
       harp: command: '<%= exec.harp_base_command %>'
       harp_background: command: '<%= exec.harp_base_command %> &'
+      compile: command: 'node_modules/.bin/harp compile public www'
       build_index_page:
         command: 'node_modules/.bin/coffee scripts/build-index-page.coffee public > public/index.html'
 
@@ -79,6 +80,7 @@ module.exports = (grunt) ->
     ]
     'build': [
       'initialize'
+      'exec:compile'
     ]
     'server': ['exec:harp']
     'default': [
