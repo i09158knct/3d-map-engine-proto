@@ -128,10 +128,27 @@ do ->
     xyAsVec3 = ([x, y]) -> new THREE.Vector3 x, y, 0
 
     materialOptions:
+      railway:
+        platform:
+          color: 0x555500
+          amount: 10
+
+        rail:
+          color: 0xffff00
+          linewidth: 1
+
       highway:
+        pedestrian:
+          color: 0x00cccc
+          amount: 1
         primary:
-          color: 0xff0000
+          color: 0xffaa555
           linewidth: 1000
+          # fog: true
+
+        secondary:
+          color: 0xaa5500
+          linewidth: 5
           # fog: true
 
         residential:
@@ -140,7 +157,7 @@ do ->
           # fog: true
 
         default:
-          color: 0xff0000
+          color: 0xcccccc
           linewidth: 1
           # fog: true
 
@@ -153,19 +170,64 @@ do ->
       amenity:
         school:
           color: 0x00aa00
+          amount: 1000
+        theatre:
+          color: 0xcc5500
+          amount: 50
+        parking:
+          color: 0xffffaa
           amount: 1
-
+        bus_station:
+          color: 0xcc0000
+          amount: 10
         default:
-          color: 0x00ff00
+          color: 0xffffff
           amount: 100
 
       building:
+        commercial:
+          color: 0x5555cc
+          amount: 50
         yes:
           color: 0x888888
-          amount: 50
+          amount: 25
+          vertexColors: THREE.VertexColors
         default:
           color: 0xffffff
           amount: 1
+
+      natural:
+        wood:
+          color: 0x00ff00
+          amount: 50
+        water:
+          color: 0x0000cc
+          amount: 5
+        default:
+          color: 0x00ff00
+          amount: 1000
+
+      leisure:
+        pitch:
+          color: 0xcc5500
+          amount: 5
+        golf_course:
+          color: 0x00cc55
+          amount: 5
+        default:
+          color: 0x00cc55
+          amount: 1000
+
+      landuse:
+        forest:
+          color: 0x00ff00
+          amount: 100
+        old_forest:
+          color: 0x005500
+          amount: 100
+        default:
+          color: 0x005500
+          amount: 500
 
     constructor: (@project, materialOptions={}) ->
       _.extend @materialOptions, materialOptions
@@ -273,10 +335,15 @@ do ->
           bevelEnabled: false
           # material: undefined
           # extrudeMaterial: undefined
+        geometry.computeFaceNormals()
+        geometry
+
 
       poly = new THREE.Mesh \
         createBuilding(area, opts),
-        new THREE.MeshBasicMaterial opts,
+        # new THREE.MeshBasicMaterial opts
+        new THREE.MeshLambertMaterial _.defaults opts,
+          side: THREE.BackSide
 
 
     createTihyo: (boundary, dem, mapimage) ->
@@ -297,22 +364,31 @@ do ->
           vertex = geometry.vertices[xindex + (yindex * xlength)]
           vertex.x = x
           vertex.y = y
-          vertex.z = dem[yindex][xindex] / 5
+          vertex.z = dem[yindex][xindex]
 
       geometry.computeFaceNormals()
       geometry.computeVertexNormals()
-      tihyo = new THREE.Mesh \
+      window.tihyo = new THREE.Mesh \
         geometry,
         new THREE.MeshBasicMaterial
           map: mapimage
-          # opacity: 0.7
-          # transparent: true
+          opacity: 0.9
+          transparent: true
           # side: THREE.DoubleSide
           # side: THREE.BackSide
 
-      tihyo.position.z = -100
+      tihyo.position.z = -10
+      tihyo.position.z = -945
       @root.add tihyo
       tihyo
+
+  # (x, y) ->
+  #   [segmentWidth, segmentHeight] = do ->
+  #     f = _.first verteceis
+  #     l = _.last verteceis
+  #     width = f.x - l.x
+  #     height = f.y - l.y
+  #     [width / xlength, height / ylength]
 
 
 
@@ -337,8 +413,8 @@ do ->
 
     constructor: ({@scene, center}) ->
       @project = d3.geo.mercator()
-        .scale 10 * 100000
-        # .scale 45 * 100000
+        # .scale 10 * 100000
+        .scale 65 * 100000
         .center center
         .translate [0, 0]
 
@@ -352,7 +428,7 @@ do ->
     createPanel: (tile) ->
       window.boundary = tileToBoundary tile.x, tile.y, tile.z
       @scene.add @renderer.root
-      @renderer.createFloor boundary
+      # @renderer.createFloor boundary
       @loadResouces boundary, tile, tile
         .spread (data, dem, mapimage) =>
           @renderer.createTihyo boundary, dem, mapimage

@@ -70,3 +70,8 @@ do (root=window) ->
     @_relief: new Resouce \
       "data/relief/{z}/{x}/{y}.png",
       (url) -> Q.fulfill THREE.ImageUtils.loadTexture url
+
+    @pale: new Resouce \
+      'http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+      (url) -> Q.fulfill THREE.ImageUtils.loadTexture url
+

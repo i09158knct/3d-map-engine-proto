@@ -24,9 +24,20 @@ $ ->
 
   # 光源
   # ====================
-  # light = new THREE.AmbientLight(0x555555)
+  # window.light = new THREE.AmbientLight(0x555555)
   # scene.add light
 
+  window.directionalLight = new THREE.DirectionalLight(0xffffffff, 1)
+  directionalLight.position.set 1000, -10000, 750
+  scene.add directionalLight
+
+  window.directionalLight2 = new THREE.DirectionalLight(0xffffffff, 0.3)
+  directionalLight2.position.set -1000, -1000, -750
+  scene.add directionalLight2
+
+  window.directionalLight3 = new THREE.DirectionalLight(0xffffffff, 1)
+  directionalLight3.position.set 1000, 1000, 750
+  scene.add directionalLight3
 
 
   # 大気
@@ -41,7 +52,7 @@ $ ->
 
   # 四角形
   # ====================
-  cube = new THREE.Mesh \
+  window.cube = new THREE.Mesh \
     new THREE.CubeGeometry(10, 10, 10),
     new THREE.MeshBasicMaterial(color: 0x00ff00)
   cube.position.set 0, 0, 0
@@ -168,10 +179,10 @@ $ ->
 
 
     loadTile: ->
-      tile = ko.toJS @tile
-      tile.x = +tile.x
-      tile.y = +tile.y
-      tile.z = +tile.z
+      tile =
+        x: +@tile.x()
+        y: +@tile.y()
+        z: +@tile.z()
       @load tile
 
     loadBoundary: ->
@@ -199,8 +210,12 @@ $ ->
     x: 14271
     y: 6531
     z: 14
+  window.tp2 =
+    x: 14501
+    y: 6414
+    z: 14
 
-  window.target = tp
+  window.target = tp2
   window.vm = new ControllerViewModel({scene, target})
   ko.applyBindings vm
   vm.load target
