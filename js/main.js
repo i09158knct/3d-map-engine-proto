@@ -1,10 +1,19 @@
 $(function() {
-  var ControllerViewModel, animate, camera, controls, cube, render, renderer, updateCamera;
+  var ControllerViewModel, animate, camera, controls, render, renderer, updateCamera;
   window.scene = new THREE.Scene();
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('container').appendChild(renderer.domElement);
-  cube = new THREE.Mesh(new THREE.CubeGeometry(10, 10, 10), new THREE.MeshBasicMaterial({
+  window.directionalLight = new THREE.DirectionalLight(0xffffffff, 1);
+  directionalLight.position.set(1000, -10000, 750);
+  scene.add(directionalLight);
+  window.directionalLight2 = new THREE.DirectionalLight(0xffffffff, 0.3);
+  directionalLight2.position.set(-1000, -1000, -750);
+  scene.add(directionalLight2);
+  window.directionalLight3 = new THREE.DirectionalLight(0xffffffff, 1);
+  directionalLight3.position.set(1000, 1000, 750);
+  scene.add(directionalLight3);
+  window.cube = new THREE.Mesh(new THREE.CubeGeometry(10, 10, 10), new THREE.MeshBasicMaterial({
     color: 0x00ff00
   }));
   cube.position.set(0, 0, 0);
@@ -173,10 +182,11 @@ $(function() {
 
     ControllerViewModel.prototype.loadTile = function() {
       var tile;
-      tile = ko.toJS(this.tile);
-      tile.x = +tile.x;
-      tile.y = +tile.y;
-      tile.z = +tile.z;
+      tile = {
+        x: +this.tile.x(),
+        y: +this.tile.y(),
+        z: +this.tile.z()
+      };
       return this.load(tile);
     };
 
@@ -209,7 +219,12 @@ $(function() {
     y: 6531,
     z: 14
   };
-  window.target = tp;
+  window.tp2 = {
+    x: 14501,
+    y: 6414,
+    z: 14
+  };
+  window.target = tp2;
   window.vm = new ControllerViewModel({
     scene: scene,
     target: target

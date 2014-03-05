@@ -113,17 +113,35 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
     };
 
     OverpassRenderer.prototype.materialOptions = {
+      railway: {
+        platform: {
+          color: 0x555500,
+          amount: 10
+        },
+        rail: {
+          color: 0xffff00,
+          linewidth: 1
+        }
+      },
       highway: {
+        pedestrian: {
+          color: 0x00cccc,
+          amount: 1
+        },
         primary: {
-          color: 0xff0000,
+          color: 0xffaa555,
           linewidth: 1000
+        },
+        secondary: {
+          color: 0xaa5500,
+          linewidth: 5
         },
         residential: {
           color: 0xffffff,
           linewidth: 2
         },
         "default": {
-          color: 0xff0000,
+          color: 0xcccccc,
           linewidth: 1
         }
       },
@@ -136,21 +154,80 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       amenity: {
         school: {
           color: 0x00aa00,
+          amount: 1000
+        },
+        theatre: {
+          color: 0xcc5500,
+          amount: 50
+        },
+        parking: {
+          color: 0xffffaa,
           amount: 1
         },
+        bus_station: {
+          color: 0xcc0000,
+          amount: 10
+        },
         "default": {
-          color: 0x00ff00,
+          color: 0xffffff,
           amount: 100
         }
       },
       building: {
+        commercial: {
+          color: 0x5555cc,
+          amount: 50
+        },
         yes: {
           color: 0x888888,
-          amount: 50
+          amount: 25,
+          vertexColors: THREE.VertexColors
         },
         "default": {
           color: 0xffffff,
           amount: 1
+        }
+      },
+      natural: {
+        wood: {
+          color: 0x00ff00,
+          amount: 50
+        },
+        water: {
+          color: 0x0000cc,
+          amount: 5
+        },
+        "default": {
+          color: 0x00ff00,
+          amount: 1000
+        }
+      },
+      leisure: {
+        pitch: {
+          color: 0xcc5500,
+          amount: 5
+        },
+        golf_course: {
+          color: 0x00cc55,
+          amount: 5
+        },
+        "default": {
+          color: 0x00cc55,
+          amount: 1000
+        }
+      },
+      landuse: {
+        forest: {
+          color: 0x00ff00,
+          amount: 100
+        },
+        old_forest: {
+          color: 0x005500,
+          amount: 100
+        },
+        "default": {
+          color: 0x005500,
+          amount: 500
         }
       }
     };
@@ -318,17 +395,21 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
           var geometry, nodes, shape;
           nodes = getNodes(_this.assoc, area);
           shape = _this.createShape(nodes);
-          return geometry = shape.extrude(_.defaults(opts, {
+          geometry = shape.extrude(_.defaults(opts, {
             amount: 5,
             bevelEnabled: false
           }));
+          geometry.computeFaceNormals();
+          return geometry;
         };
       })(this);
-      return poly = new THREE.Mesh(createBuilding(area, opts), new THREE.MeshBasicMaterial(opts));
+      return poly = new THREE.Mesh(createBuilding(area, opts), new THREE.MeshLambertMaterial(_.defaults(opts, {
+        side: THREE.BackSide
+      })));
     };
 
     OverpassRenderer.prototype.createTihyo = function(boundary, dem, mapimage) {
-      var geometry, latDegreesPerSegment, lonDegreesPerSegment, tihyo, xlength, ylength;
+      var geometry, latDegreesPerSegment, lonDegreesPerSegment, xlength, ylength;
       xlength = dem[0].length;
       ylength = dem.length;
       lonDegreesPerSegment = (boundary.e - boundary.w) / xlength;
@@ -344,16 +425,19 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
             vertex = geometry.vertices[xindex + (yindex * xlength)];
             vertex.x = x;
             vertex.y = y;
-            return vertex.z = dem[yindex][xindex] / 5;
+            return vertex.z = dem[yindex][xindex];
           });
         };
       })(this));
       geometry.computeFaceNormals();
       geometry.computeVertexNormals();
-      tihyo = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-        map: mapimage
+      window.tihyo = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+        map: mapimage,
+        opacity: 0.9,
+        transparent: true
       }));
-      tihyo.position.z = -100;
+      tihyo.position.z = -10;
+      tihyo.position.z = -945;
       this.root.add(tihyo);
       return tihyo;
     };
@@ -379,7 +463,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
     function OverpassLayer(_arg) {
       var center;
       this.scene = _arg.scene, center = _arg.center;
-      this.project = d3.geo.mercator().scale(10 * 100000).center(center).translate([0, 0]);
+      this.project = d3.geo.mercator().scale(65 * 100000).center(center).translate([0, 0]);
       this.renderer = new OverpassRenderer(this.project);
     }
 
@@ -396,7 +480,6 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
     OverpassLayer.prototype.createPanel = function(tile) {
       window.boundary = tileToBoundary(tile.x, tile.y, tile.z);
       this.scene.add(this.renderer.root);
-      this.renderer.createFloor(boundary);
       return this.loadResouces(boundary, tile, tile).spread((function(_this) {
         return function(data, dem, mapimage) {
           _this.renderer.createTihyo(boundary, dem, mapimage);

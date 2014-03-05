@@ -84,6 +84,10 @@ var __slice = [].slice;
       return Q.fulfill(THREE.ImageUtils.loadTexture(url));
     });
 
+    Resouce.pale = new Resouce('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', function(url) {
+      return Q.fulfill(THREE.ImageUtils.loadTexture(url));
+    });
+
     return Resouce;
 
   })();
